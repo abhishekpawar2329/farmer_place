@@ -195,33 +195,45 @@ def add_product():
     image_file = request.files.get('image')
     image_filename = 'default_crop.png'
 
-   if image_file and image_file.filename != '':
-    image_filename = secure_filename(image_file.filename)
-    image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
-    try:
-        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-        image_file.save(image_path)
-    except Exception:
-        image_filename = 'default_crop.png'
+@app.route('/add_product', methods=['POST'])
+def add_product():
+
+    if 'user_id' not in session or session['user_role'] != 'farmer':
+        return redirect('/')
+
+    cursor = get_cursor()
+
+    name = request.form['name']
+    category = request.form['category']
+    price = request.form['price']
+    unit = request.form['unit']
+    quantity = request.form.get('quantity', 0)
+    description = request.form.get('description', '')
+
+    image_file = request.files.get('image')
+    image_filename = 'default_crop.png'
+
+    if image_file and image_file.filename != '':
+        image_filename = secure_filename(image_file.filename)
+        image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
+        try:
+            os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+            image_file.save(image_path)
+        except Exception:
+            image_filename = 'default_crop.png'
 
     cursor.execute("""
         INSERT INTO products
         (farmer_id, name, category, price, unit, quantity, description, image, status)
         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,'Listed')
     """, (
-        session['user_id'],
-        name,
-        category,
-        price,
-        unit,
-        quantity,
-        description,
-        image_filename
+        session['user_id'], name, category, price,
+        unit, quantity, description, image_filename
     ))
 
     db.commit()
-
     return redirect('/farmer_dashboard')
+
 
 # ---------- DELETE PRODUCT ----------
 @app.route('/delete_product/<int:product_id>', methods=['POST'])
