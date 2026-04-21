@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ t.farmer_dashboard }}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/farmer.css') }}">
+</head>
+
+<body>
+
+<!-- ---------- HEADER ---------- -->
+<header class="top-bar">
+
+    <h2>🌾 {{ t.welcome }}, {{ farmer_name }}</h2>
+
+    <div class="header-actions">
+
+        <!-- LANGUAGE SWITCH -->
+        <div class="language-switch">
+
+            <a href="?lang=en">English</a>
+            <a href="?lang=hi">हिंदी</a>
+            <a href="?lang=mr">मराठी</a>
+
+        </div>
+
+        <a href="/logout" class="logout">{{ t.logout }}</a>
+
+    </div>
+
+</header>
+
+
+<!-- ---------- STATS ---------- -->
+<section class="stats">
+
+    <div class="stat-card">
+        <p>{{ t.total_orders }}</p>
+        <span>{{ order_count }}</span>
+    </div>
+
+    <div class="stat-card earnings">
+        <p>{{ t.total_earnings }}</p>
+        <span>₹{{ total_earnings }}</span>
+    </div>
+
+</section>
+
+
+<!-- ---------- ADD PRODUCT ---------- -->
+<section class="add-product">
+
+    <h3>➕ {{ t.add_product }}</h3>
+
+    <form method="POST"
+          action="/add_product"
+          enctype="multipart/form-data">
+
+        <input type="text"
+               name="name"
+               placeholder="{{ t.product_name }}"
+               required>
+
+        <select name="category">
+            <option>{{ t.vegetables }}</option>
+            <option>{{ t.fruits }}</option>
+            <option>{{ t.grains }}</option>
+        </select>
+
+        <input type="number"
+               name="price"
+               placeholder="{{ t.price }}"
+               required>
+
+        <input type="text"
+               name="unit"
+               placeholder="{{ t.unit }}">
+
+        <input type="number"
+               name="quantity"
+               placeholder="{{ t.quantity }}">
+
+        <textarea name="description"
+                  placeholder="{{ t.description }}"></textarea>
+
+        <input type="file"
+               name="image"
+               accept="image/*">
+
+        <button type="submit">
+            {{ t.add_product }}
+        </button>
+
+    </form>
+
+</section>
+
+
+<!-- ---------- PRODUCT LIST ---------- -->
+<section class="products">
+
+    <h3>📦 {{ t.my_products }}</h3>
+
+    {% if products %}
+
+    <table>
+
+        <tr>
+            <th>{{ t.image }}</th>
+            <th>{{ t.name }}</th>
+            <th>{{ t.price }}</th>
+            <th>{{ t.quantity }}</th>
+            <th>{{ t.status }}</th>
+            <th>{{ t.action }}</th>
+        </tr>
+
+        {% for p in products %}
+        <tr>
+
+            <td>
+                <img src="{{ url_for('static',
+                filename='images/' + p.image) }}"
+                class="product-img">
+            </td>
+
+            <td>{{ p.name }}</td>
+
+            <td>₹{{ p.price }}/{{ p.unit }}</td>
+
+            <td>{{ p.quantity }}</td>
+
+            <td>
+
+                {% if p.status == 'Deleted' %}
+                    <span class="status deleted">
+                        {{ t.deleted }}
+                    </span>
+                {% else %}
+                    <span class="status listed">
+                        {{ t.listed }}
+                    </span>
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                {% if p.status != 'Deleted' %}
+
+                <form action="/delete_product/{{ p.id }}"
+                      method="POST">
+
+                    <button class="delete-btn">
+                        🗑 {{ t.delete }}
+                    </button>
+
+                </form>
+
+                {% else %}
+
+                <button class="delete-btn disabled" disabled>
+                    {{ t.already_deleted }}
+                </button>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+        <p class="no-products">
+            {{ t.no_products }}
+        </p>
+
+    {% endif %}
+
+</section>
+
+</body>
+</html>

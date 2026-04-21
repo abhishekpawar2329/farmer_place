@@ -1,0 +1,93 @@
+body {
+    font-family: Arial;
+    background: #f5f6fa;
+    margin: 0;
+}
+
+header {
+    background: #2e7d32;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+}
+.delete-btn {
+    background: #e53935;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.delete-btn:hover {
+    background: #c62828;
+}
+
+.cart-container {
+    width: 80%;
+    margin: 30px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.checkout-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 15px;
+    background: #ff9800;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.checkout-btn:hover {
+    background: #f57c00;
+}
+/* ---------- LANGUAGE SWITCH ---------- */
+
+.header-actions{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.language-switch{
+    display:flex;
+    gap:10px;
+}
+
+.language-switch a{
+    text-decoration:none;
+    font-size:13px;
+    padding:5px 10px;
+    border-radius:6px;
+    background:#ffffff33;
+    color:white;
+    font-weight:600;
+    transition:0.2s;
+}
+
+.language-switch a:hover{
+    background:#ffffff55;
+}

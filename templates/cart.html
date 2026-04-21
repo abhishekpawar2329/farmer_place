@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>{{ t.my_cart }}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/cart.css') }}">
+
+</head>
+
+<body>
+
+<!-- ---------- HEADER ---------- -->
+<header class="top-bar">
+
+    <h2>🛒 {{ t.my_cart }}</h2>
+
+    <div class="header-actions">
+
+        <!-- LANGUAGE SWITCH -->
+        <div class="language-switch">
+            <a href="?lang=en">English</a>
+            <a href="?lang=hi">हिंदी</a>
+            <a href="?lang=mr">मराठी</a>
+        </div>
+
+        <a href="/buyer_dashboard">
+            ⬅ {{ t.continue_shopping }}
+        </a>
+
+        <a href="/logout" class="logout">
+            {{ t.logout }}
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- ---------- CART ITEMS ---------- -->
+<section class="cart-container">
+
+{% if cart_items %}
+
+<table>
+
+    <tr>
+        <th>{{ t.product }}</th>
+        <th>{{ t.price }}</th>
+        <th>{{ t.quantity }}</th>
+        <th>{{ t.total }}</th>
+        <th>{{ t.action }}</th>
+    </tr>
+
+
+    {% for item in cart_items %}
+
+    <tr>
+
+        <td>{{ item.name }}</td>
+
+        <td>₹{{ item.price }}</td>
+
+        <td>{{ item.quantity }}</td>
+
+        <td>₹{{ item.price * item.quantity }}</td>
+
+        <td>
+
+            <form action="/delete_from_cart/{{ item.id }}"
+                  method="POST">
+
+                <button class="delete-btn">
+                    ❌ {{ t.remove }}
+                </button>
+
+            </form>
+
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+
+<!-- ---------- CHECKOUT ---------- -->
+<div class="checkout-box">
+
+    <h3>
+        {{ t.total_amount }}: ₹{{ total_amount }}
+    </h3>
+
+    <form action="/payment" method="GET">
+
+        <button class="checkout-btn">
+            ✅ {{ t.checkout }}
+        </button>
+
+    </form>
+
+</div>
+
+{% else %}
+
+<p class="empty-cart">
+    {{ t.cart_empty }}
+</p>
+
+{% endif %}
+
+</section>
+
+</body>
+</html>

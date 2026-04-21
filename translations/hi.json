@@ -1,0 +1,87 @@
+{
+  "farmer_dashboard": "किसान डैशबोर्ड",
+  "buyer_dashboard": "खरीदार डैशबोर्ड",
+
+  "add_product": "उत्पाद जोड़ें",
+  "product_name": "उत्पाद का नाम",
+  "price": "कीमत",
+  "quantity": "मात्रा",
+  "description": "विवरण",
+  "category": "श्रेणी",
+  "image": "उत्पाद छवि",
+  "unit": "इकाई",
+
+  "my_products": "मेरे उत्पाद",
+  "available_products": "उपलब्ध उत्पाद",
+
+  "total_products": "कुल उत्पाद",
+  "total_orders": "कुल ऑर्डर",
+  "total_earnings": "कुल कमाई",
+
+  "add_to_cart": "कार्ट में जोड़ें",
+  "cart": "कार्ट",
+  "checkout": "चेकआउट",
+  "available": "उपलब्ध",
+
+  "delete": "हटाएं",
+  "status": "स्थिति",
+  "action": "कार्रवाई",
+  "name": "नाम",
+  "total": "कुल",
+  "product": "उत्पाद",
+
+  "listed": "सूचीबद्ध",
+  "deleted": "हटाया गया",
+  "already_deleted": "पहले ही हटाया गया",
+  "no_products": "अभी तक कोई उत्पाद नहीं जोड़ा गया।",
+
+  "search_products": "उत्पाद खोजें",
+  "logout": "लॉगआउट",
+  "welcome": "स्वागत",
+  "language": "भाषा",
+
+  "added_to_cart": "कार्ट में जोड़ा गया!",
+  "continue_shopping": "खरीदारी जारी रखें",
+  "back_to_cart": "कार्ट पर वापस",
+  "my_cart": "मेरी कार्ट",
+  "cart_empty": "आपकी कार्ट खाली है।",
+  "total_amount": "कुल राशि",
+  "remove": "हटाएं",
+
+  "payment": "भुगतान",
+  "order_summary": "ऑर्डर सारांश",
+  "delivery_address": "डिलीवरी पता",
+  "payment_method": "भुगतान का तरीका",
+
+  "full_name": "पूरा नाम",
+  "phone": "फोन नंबर",
+  "address_line1": "पता पंक्ति 1",
+  "address_line1_placeholder": "मकान नं., सड़क, क्षेत्र",
+  "address_line2": "पता पंक्ति 2 (वैकल्पिक)",
+  "address_line2_placeholder": "लैंडमार्क, गांव, कॉलोनी",
+  "city": "शहर",
+  "state": "राज्य",
+  "pincode": "पिनकोड",
+
+  "cash_on_delivery": "कैश ऑन डिलीवरी",
+  "cod_sub": "डिलीवरी पर भुगतान करें",
+  "debit_credit_card": "डेबिट / क्रेडिट कार्ड",
+  "net_banking": "नेट बैंकिंग",
+  "select_bank": "बैंक चुनें",
+  "upi_id": "UPI आईडी",
+  "card_number": "कार्ड नंबर",
+  "expiry": "समाप्ति तिथि",
+
+  "place_order": "ऑर्डर दें",
+  "processing": "प्रोसेस हो रहा है...",
+  "order_placed": "ऑर्डर दिया गया!",
+  "order_placed_sub": "आपकी ताज़ी उपज रास्ते में है। स्थानीय किसानों का समर्थन करने के लिए धन्यवाद!",
+
+  "secure_payment": "सुरक्षित भुगतान",
+  "direct_from_farm": "सीधे खेत से",
+
+  "vegetables": "सब्जियां",
+  "fruits": "फल",
+  "grains": "अनाज",
+  "fresh_from_farmers": "किसानों से ताज़ा"
+}

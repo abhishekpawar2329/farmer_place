@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t.payment }} – Smart Farmer Marketplace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/payment.css') }}">
+</head>
+<body>
+
+<!-- ---------- HEADER ---------- -->
+<header class="top-bar">
+    <h2>🌾 {{ t.payment }}</h2>
+    <div class="header-actions">
+        <div class="language-switch">
+            <a href="?lang=en">English</a>
+            <a href="?lang=hi">हिंदी</a>
+            <a href="?lang=mr">मराठी</a>
+        </div>
+        <a href="/cart" class="back-link">⬅ {{ t.back_to_cart }}</a>
+        <a href="/logout" class="logout">{{ t.logout }}</a>
+    </div>
+</header>
+
+<main class="payment-shell">
+
+    <!-- ===== LEFT: ORDER SUMMARY ===== -->
+    <section class="order-summary">
+        <h3 class="section-title">🧾 {{ t.order_summary }}</h3>
+
+        <ul class="summary-list">
+            {% for item in cart_items %}
+            <li class="summary-item">
+                <span class="item-name">{{ item.name }}</span>
+                <span class="item-meta">× {{ item.quantity }}</span>
+                <span class="item-price">₹{{ item.price * item.quantity }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-total">
+            <span>{{ t.total_amount }}</span>
+            <span class="total-value">₹{{ total_amount }}</span>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="trust-row">
+            <div class="trust-badge">🔒 {{ t.secure_payment }}</div>
+            <div class="trust-badge">🚜 {{ t.direct_from_farm }}</div>
+        </div>
+    </section>
+
+    <!-- ===== RIGHT: PAYMENT FORM ===== -->
+    <section class="payment-form-section">
+
+        <form method="POST" action="/checkout" id="paymentForm">
+
+            <!-- DELIVERY ADDRESS -->
+            <div class="form-card" id="addressCard">
+                <h3 class="card-title">📍 {{ t.delivery_address }}</h3>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label>{{ t.full_name }}</label>
+                        <input type="text" name="full_name" placeholder="Ramesh Patil" required>
+                    </div>
+                    <div class="field-group">
+                        <label>{{ t.phone }}</label>
+                        <input type="tel" name="phone" placeholder="9876543210"
+                               pattern="[0-9]{10}" maxlength="10" required>
+                    </div>
+                </div>
+
+                <div class="field-group full">
+                    <label>{{ t.address_line1 }}</label>
+                    <input type="text" name="address_line1"
+                           placeholder="{{ t.address_line1_placeholder }}" required>
+                </div>
+
+                <div class="field-group full">
+                    <label>{{ t.address_line2 }}</label>
+                    <input type="text" name="address_line2"
+                           placeholder="{{ t.address_line2_placeholder }}">
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label>{{ t.city }}</label>
+                        <input type="text" name="city" placeholder="Pune" required>
+                    </div>
+                    <div class="field-group">
+                        <label>{{ t.state }}</label>
+                        <input type="text" name="state" placeholder="Maharashtra" required>
+                    </div>
+                    <div class="field-group small">
+                        <label>{{ t.pincode }}</label>
+                        <input type="text" name="pincode" placeholder="411001"
+                               pattern="[0-9]{6}" maxlength="6" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAYMENT MODE -->
+            <div class="form-card" id="paymentCard">
+                <h3 class="card-title">💳 {{ t.payment_method }}</h3>
+
+                <div class="payment-options">
+
+                    <!-- UPI -->
+                    <label class="pay-option" for="upi">
+                        <input type="radio" id="upi" name="payment_mode" value="UPI" checked>
+                        <div class="pay-tile">
+                            <div class="pay-icon">⚡</div>
+                            <div class="pay-info">
+                                <span class="pay-name">UPI</span>
+                                <span class="pay-sub">GPay, PhonePe, Paytm</span>
+                            </div>
+                            <div class="pay-check">✓</div>
+                        </div>
+                    </label>
+
+                    <!-- Cash on Delivery -->
+                    <label class="pay-option" for="cod">
+                        <input type="radio" id="cod" name="payment_mode" value="Cash on Delivery">
+                        <div class="pay-tile">
+                            <div class="pay-icon">💵</div>
+                            <div class="pay-info">
+                                <span class="pay-name">{{ t.cash_on_delivery }}</span>
+                                <span class="pay-sub">{{ t.cod_sub }}</span>
+                            </div>
+                            <div class="pay-check">✓</div>
+                        </div>
+                    </label>
+
+                    <!-- Debit / Credit Card -->
+                    <label class="pay-option" for="card">
+                        <input type="radio" id="card" name="payment_mode" value="Card">
+                        <div class="pay-tile">
+                            <div class="pay-icon">💳</div>
+                            <div class="pay-info">
+                                <span class="pay-name">{{ t.debit_credit_card }}</span>
+                                <span class="pay-sub">Visa, Mastercard, RuPay</span>
+                            </div>
+                            <div class="pay-check">✓</div>
+                        </div>
+                    </label>
+
+                    <!-- Net Banking -->
+                    <label class="pay-option" for="netbanking">
+                        <input type="radio" id="netbanking" name="payment_mode" value="Net Banking">
+                        <div class="pay-tile">
+                            <div class="pay-icon">🏦</div>
+                            <div class="pay-info">
+                                <span class="pay-name">{{ t.net_banking }}</span>
+                                <span class="pay-sub">SBI, HDFC, ICICI, Axis</span>
+                            </div>
+                            <div class="pay-check">✓</div>
+                        </div>
+                    </label>
+
+                </div>
+
+                <!-- UPI sub-input -->
+                <div class="sub-input" id="upiField">
+                    <label>{{ t.upi_id }}</label>
+                    <input type="text" name="upi_id" placeholder="yourname@upi">
+                </div>
+
+                <!-- Card sub-input -->
+                <div class="sub-input hidden" id="cardField">
+                    <label>{{ t.card_number }}</label>
+                    <input type="text" name="card_number" id="cardNumber"
+                           placeholder="1234 5678 9012 3456" maxlength="19">
+                    <div class="field-row" style="margin-top:12px">
+                        <div class="field-group">
+                            <label>{{ t.expiry }}</label>
+                            <input type="text" name="expiry" placeholder="MM / YY" maxlength="7">
+                        </div>
+                        <div class="field-group small">
+                            <label>CVV</label>
+                            <input type="password" name="cvv" placeholder="•••" maxlength="3">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Net banking sub-input -->
+                <div class="sub-input hidden" id="netField">
+                    <label>{{ t.select_bank }}</label>
+                    <select name="bank">
+                        <option value="">-- {{ t.select_bank }} --</option>
+                        <option>SBI</option>
+                        <option>HDFC Bank</option>
+                        <option>ICICI Bank</option>
+                        <option>Axis Bank</option>
+                        <option>Kotak Mahindra</option>
+                        <option>Bank of Baroda</option>
+                        <option>Punjab National Bank</option>
+                        <option>Canara Bank</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- PLACE ORDER BUTTON -->
+            <button type="submit" class="place-order-btn" id="placeOrderBtn">
+                <span class="btn-label">✅ {{ t.place_order }} — ₹{{ total_amount }}</span>
+                <span class="btn-spinner hidden" id="spinner">⏳ {{ t.processing }}</span>
+            </button>
+
+        </form>
+    </section>
+
+</main>
+
+<!-- ---------- SUCCESS OVERLAY ---------- -->
+<div class="success-overlay hidden" id="successOverlay">
+    <div class="success-box">
+        <div class="success-icon">✅</div>
+        <h2>{{ t.order_placed }}</h2>
+        <p>{{ t.order_placed_sub }}</p>
+        <a href="/buyer_dashboard" class="success-btn">{{ t.continue_shopping }}</a>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/payment.js') }}"></script>
+
+</body>
+</html>

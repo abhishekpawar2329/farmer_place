@@ -1,0 +1,87 @@
+{
+  "farmer_dashboard": "Farmer Dashboard",
+  "buyer_dashboard": "Buyer Dashboard",
+
+  "add_product": "Add Product",
+  "product_name": "Product Name",
+  "price": "Price",
+  "quantity": "Quantity",
+  "description": "Description",
+  "category": "Category",
+  "image": "Product Image",
+  "unit": "Unit",
+
+  "my_products": "My Products",
+  "available_products": "Available Products",
+
+  "total_products": "Total Products",
+  "total_orders": "Total Orders",
+  "total_earnings": "Total Earnings",
+
+  "add_to_cart": "Add to Cart",
+  "cart": "Cart",
+  "checkout": "Checkout",
+  "available": "Available",
+
+  "delete": "Delete",
+  "status": "Status",
+  "action": "Action",
+  "name": "Name",
+  "total": "Total",
+  "product": "Product",
+
+  "listed": "Listed",
+  "deleted": "Deleted",
+  "already_deleted": "Already Deleted",
+  "no_products": "No products added yet.",
+
+  "search_products": "Search Products",
+  "logout": "Logout",
+  "welcome": "Welcome",
+  "language": "Language",
+
+  "added_to_cart": "Added to cart!",
+  "continue_shopping": "Continue Shopping",
+  "back_to_cart": "Back to Cart",
+  "my_cart": "My Cart",
+  "cart_empty": "Your cart is empty.",
+  "total_amount": "Total Amount",
+  "remove": "Remove",
+
+  "payment": "Payment",
+  "order_summary": "Order Summary",
+  "delivery_address": "Delivery Address",
+  "payment_method": "Payment Method",
+
+  "full_name": "Full Name",
+  "phone": "Phone Number",
+  "address_line1": "Address Line 1",
+  "address_line1_placeholder": "House No., Street, Area",
+  "address_line2": "Address Line 2 (optional)",
+  "address_line2_placeholder": "Landmark, Village, Colony",
+  "city": "City",
+  "state": "State",
+  "pincode": "Pincode",
+
+  "cash_on_delivery": "Cash on Delivery",
+  "cod_sub": "Pay when you receive",
+  "debit_credit_card": "Debit / Credit Card",
+  "net_banking": "Net Banking",
+  "select_bank": "Select Bank",
+  "upi_id": "UPI ID",
+  "card_number": "Card Number",
+  "expiry": "Expiry",
+
+  "place_order": "Place Order",
+  "processing": "Processing...",
+  "order_placed": "Order Placed!",
+  "order_placed_sub": "Your fresh produce is on its way. Thank you for supporting local farmers!",
+
+  "secure_payment": "Secure Payment",
+  "direct_from_farm": "Direct from Farm",
+
+  "vegetables": "Vegetables",
+  "fruits": "Fruits",
+  "grains": "Grains",
+  "fresh_from_farmers": "Fresh from Farmers"
+}

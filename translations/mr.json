@@ -1,0 +1,87 @@
+{
+  "farmer_dashboard": "शेतकरी डॅशबोर्ड",
+  "buyer_dashboard": "खरेदीदार डॅशबोर्ड",
+
+  "add_product": "उत्पादन जोडा",
+  "product_name": "उत्पादन नाव",
+  "price": "किंमत",
+  "quantity": "प्रमाण",
+  "description": "वर्णन",
+  "category": "वर्ग",
+  "image": "उत्पादन प्रतिमा",
+  "unit": "एकक",
+
+  "my_products": "माझी उत्पादने",
+  "available_products": "उपलब्ध उत्पादने",
+
+  "total_products": "एकूण उत्पादने",
+  "total_orders": "एकूण ऑर्डर",
+  "total_earnings": "एकूण कमाई",
+
+  "add_to_cart": "कार्टमध्ये जोडा",
+  "cart": "कार्ट",
+  "checkout": "चेकआउट",
+  "available": "उपलब्ध",
+
+  "delete": "हटवा",
+  "status": "स्थिती",
+  "action": "कृती",
+  "name": "नाव",
+  "total": "एकूण",
+  "product": "उत्पादन",
+
+  "listed": "सूचीत",
+  "deleted": "हटवले",
+  "already_deleted": "आधीच हटवले",
+  "no_products": "अद्याप कोणतेही उत्पादन जोडले नाही.",
+
+  "search_products": "उत्पादने शोधा",
+  "logout": "बाहेर पडा",
+  "welcome": "स्वागत आहे",
+  "language": "भाषा",
+
+  "added_to_cart": "कार्टमध्ये जोडले!",
+  "continue_shopping": "खरेदी सुरू ठेवा",
+  "back_to_cart": "कार्टवर परत",
+  "my_cart": "माझी कार्ट",
+  "cart_empty": "तुमची कार्ट रिकामी आहे.",
+  "total_amount": "एकूण रक्कम",
+  "remove": "काढा",
+
+  "payment": "पेमेंट",
+  "order_summary": "ऑर्डर सारांश",
+  "delivery_address": "वितरण पत्ता",
+  "payment_method": "पेमेंट पद्धत",
+
+  "full_name": "पूर्ण नाव",
+  "phone": "फोन नंबर",
+  "address_line1": "पत्ता ओळ 1",
+  "address_line1_placeholder": "घर क्र., रस्ता, परिसर",
+  "address_line2": "पत्ता ओळ 2 (पर्यायी)",
+  "address_line2_placeholder": "खूण, गाव, कॉलनी",
+  "city": "शहर",
+  "state": "राज्य",
+  "pincode": "पिनकोड",
+
+  "cash_on_delivery": "रोख डिलिव्हरीवर",
+  "cod_sub": "डिलिव्हरीवर पैसे द्या",
+  "debit_credit_card": "डेबिट / क्रेडिट कार्ड",
+  "net_banking": "नेट बँकिंग",
+  "select_bank": "बँक निवडा",
+  "upi_id": "UPI आयडी",
+  "card_number": "कार्ड नंबर",
+  "expiry": "कालबाह्यता",
+
+  "place_order": "ऑर्डर द्या",
+  "processing": "प्रक्रिया होत आहे...",
+  "order_placed": "ऑर्डर दिला!",
+  "order_placed_sub": "तुमचे ताजे उत्पादन येत आहे. स्थानिक शेतकऱ्यांना पाठिंबा दिल्याबद्दल धन्यवाद!",
+
+  "secure_payment": "सुरक्षित पेमेंट",
+  "direct_from_farm": "थेट शेतातून",
+
+  "vegetables": "भाज्या",
+  "fruits": "फळे",
+  "grains": "धान्य",
+  "fresh_from_farmers": "शेतकऱ्यांकडून ताजे"
+}

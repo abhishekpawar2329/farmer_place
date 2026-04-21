@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>{{ t.buyer_dashboard }}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/buyer.css') }}">
+
+</head>
+
+<body>
+
+<!-- ---------- HEADER ---------- -->
+<header class="top-bar">
+
+    <h2>🥬 {{ t.fresh_from_farmers }}</h2>
+
+    <div class="top-actions">
+
+        <!-- LANGUAGE SWITCH -->
+        <div class="language-switch">
+
+            <a href="?lang=en">English</a>
+            <a href="?lang=hi">हिंदी</a>
+            <a href="?lang=mr">मराठी</a>
+
+        </div>
+
+        <a href="/cart" class="cart-link">
+            🛒 {{ t.cart }}
+            (<span id="cartCount">0</span>)
+        </a>
+
+        <a href="/logout" class="logout">
+            {{ t.logout }}
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- ---------- PRODUCTS ---------- -->
+<section class="product-grid">
+
+    {% for p in products %}
+
+    <div class="product-card">
+
+        <!-- PRODUCT IMAGE -->
+        <img src="{{ url_for('static',
+        filename='images/' + (p.image or 'default_crop.png')) }}"
+        alt="{{ p.name }}">
+
+        <div class="info">
+
+            <h3>{{ p.name }}</h3>
+
+            <p class="farmer">
+                👨‍🌾 {{ p.farmer_name }}
+            </p>
+
+            <div class="price-row">
+
+                <span class="price">
+                    ₹{{ p.price }}
+                </span>
+
+                <span class="unit">
+                    / {{ p.unit }}
+                </span>
+
+            </div>
+
+            <p class="qty">
+                {{ t.available }}: {{ p.quantity }}
+            </p>
+
+
+            <!-- ADD TO CART -->
+            <form class="cart-form"
+                  data-id="{{ p.id }}">
+
+                <input type="number"
+                       name="quantity"
+                       value="1"
+                       min="1"
+                       max="{{ p.quantity }}">
+
+                <button type="submit"
+                        class="cart-btn">
+
+                    ➕ {{ t.add_to_cart }}
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</section>
+
+
+<!-- ---------- TOAST MESSAGE ---------- -->
+<div id="toast">
+    {{ t.added_to_cart }}
+</div>
+
+
+<script src="{{ url_for('static',
+filename='js/buyer.js') }}"></script>
+
+</body>
+</html>

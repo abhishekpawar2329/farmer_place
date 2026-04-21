@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Farmer Marketplace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login-styles.css') }}">
+
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Smart Farmer Marketplace</h1>
+            <p>Sell crops directly to buyers</p>
+        </header>
+
+        <div class="login-card">
+            <div class="tabs">
+                <button class="tab-btn active" id="loginTab">Login</button>
+                <button class="tab-btn" id="signupTab">Sign up</button>
+            </div>
+
+            <form id="authForm">
+                <div class="input-group hidden" id="nameField">
+                    <label for="name">Full name</label>
+                    <input type="text" id="name" placeholder="Jane Doe">
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+
+                <div class="role-selection">
+                    <p>I am a</p>
+                    <div class="role-group">
+                        <input type="radio" id="farmer" name="role" value="farmer" checked>
+                        <label for="farmer" class="role-label">Farmer</label>
+
+                        <input type="radio" id="buyer" name="role" value="buyer">
+                        <label for="buyer" class="role-label">Buyer</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="mainSubmit">Log in</button>
+            </form>
+        </div>
+
+        <a href="#" class="back-home">← Back to home</a>
+    </div>
+
+   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</html>
