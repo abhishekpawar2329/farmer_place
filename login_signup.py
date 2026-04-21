@@ -16,19 +16,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # ---------- MYSQL CONNECTION ----------
 import os
 
-db = mysql.connector.connect(
-    host=os.environ.get("MYSQLHOST"),
-    user=os.environ.get("MYSQLUSER"),
-    password=os.environ.get("MYSQLPASSWORD"),
-    database=os.environ.get("MYSQLDATABASE"),
-    port=int(os.environ.get("MYSQLPORT", 3306))
-)
+db = None
 
-def get_cursor():
+def get_db():
     global db
-    try:
-        db.ping(reconnect=True, attempts=3, delay=2)
-    except:
+    if db is None or not db.is_connected():
         db = mysql.connector.connect(
             host=os.environ.get('MYSQLHOST', 'localhost'),
             user=os.environ.get('MYSQLUSER', 'root'),
@@ -36,6 +28,24 @@ def get_cursor():
             database=os.environ.get('MYSQLDATABASE', 'smart_farmer'),
             port=int(os.environ.get('MYSQLPORT', 3306))
         )
+    return db
+
+db = None
+
+def get_db():
+    global db
+    if db is None or not db.is_connected():
+        db = mysql.connector.connect(
+            host=os.environ.get('MYSQLHOST', 'localhost'),
+            user=os.environ.get('MYSQLUSER', 'root'),
+            password=os.environ.get('MYSQLPASSWORD', 'Orpmk_2006'),
+            database=os.environ.get('MYSQLDATABASE', 'smart_farmer'),
+            port=int(os.environ.get('MYSQLPORT', 3306))
+        )
+    return db
+
+def get_cursor():
+    db = get_db()
     return db.cursor(dictionary=True)
 
 # ---------- LANGUAGE LOADER ----------
