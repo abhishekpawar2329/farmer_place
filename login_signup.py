@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os, json, requests, logging
 
-# ---------- BASIC CONFIG ----------
+# ---------- CONFIG ----------
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "secret123")
 logging.basicConfig(level=logging.INFO)
@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 UPLOAD_FOLDER = 'static/images'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# ---------- MYSQL ----------
+# ---------- DATABASE ----------
 db = None
 
 def get_db():
@@ -31,8 +31,6 @@ def get_cursor():
     return get_db().cursor(dictionary=True)
 
 # ---------- TRANSLATION ----------
-translation_cache = {}
-
 def translate_text(text, lang):
     try:
         res = requests.get(
@@ -48,7 +46,6 @@ def load_language():
     lang = request.args.get('lang')
     if lang:
         session['lang'] = lang
-
     lang = session.get('lang', 'en')
 
     try:
@@ -58,12 +55,11 @@ def load_language():
         with open("translations/en.json", encoding="utf-8") as f:
             return json.load(f)
 
-# ---------- LOGIN ----------
+# ---------- AUTH ----------
 @app.route('/')
 def login_page():
     return render_template('SFM-login.html', t=load_language())
 
-# ---------- AUTH ----------
 @app.route('/auth', methods=['POST'])
 def auth():
     cursor = get_cursor()
@@ -103,7 +99,7 @@ def auth():
 # ---------- FARMER ----------
 @app.route('/farmer_dashboard')
 def farmer_dashboard():
-    if 'user_id' not in session or session['user_role'] != 'farmer':
+    if 'user_role' not in session or session['user_role'] != 'farmer':
         return redirect('/')
 
     cursor = get_cursor()
@@ -112,30 +108,18 @@ def farmer_dashboard():
     cursor.execute("SELECT * FROM products WHERE farmer_id=%s", (fid,))
     products = cursor.fetchall()
 
-    cursor.execute("SELECT COUNT(*) total FROM orders WHERE farmer_id=%s", (fid,))
-    total_orders = cursor.fetchone()['total']
-
-    cursor.execute("SELECT COALESCE(SUM(total_price),0) total FROM orders WHERE farmer_id=%s", (fid,))
-    earnings = cursor.fetchone()['total']
-
     return render_template('farmer_dashboard.html',
-        products=products,
-        order_count=total_orders,
-        total_earnings=earnings,
-        farmer_name=session['user_name'],
-        t=load_language()
-    )
+                           products=products,
+                           farmer_name=session['user_name'],
+                           t=load_language())
 
-# ✅ FIXED ADD PRODUCT (MOBILE SAFE)
 @app.route('/add_product', methods=['POST'])
 def add_product():
-
     if 'user_role' not in session or session['user_role'] != 'farmer':
         return redirect('/')
 
     cursor = get_cursor()
 
-    # SAFE INPUT (no crash on mobile)
     name = request.form.get('name')
     category = request.form.get('category')
     price = request.form.get('price')
@@ -143,11 +127,9 @@ def add_product():
     quantity = request.form.get('quantity', 0)
     description = request.form.get('description', '')
 
-    # VALIDATION
     if not name or not price:
         return "Missing required fields"
 
-    # IMAGE HANDLING
     image = request.files.get('image')
     filename = 'default_crop.png'
 
@@ -156,29 +138,15 @@ def add_product():
         os.makedirs(UPLOAD_FOLDER, exist_ok=True)
         image.save(os.path.join(UPLOAD_FOLDER, filename))
 
-    # INSERT
     cursor.execute("""
         INSERT INTO products
         (farmer_id,name,category,price,unit,quantity,description,image,status)
         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,'Listed')
     """, (
-        session['user_id'],
-        name,
-        category,
-        price,
-        unit,
-        quantity,
-        description,
-        filename
+        session['user_id'], name, category, price,
+        unit, quantity, description, filename
     ))
 
-    get_db().commit()
-    return redirect('/farmer_dashboard')
-
-@app.route('/delete_product/<int:id>', methods=['POST'])
-def delete_product(id):
-    cursor = get_cursor()
-    cursor.execute("UPDATE products SET status='Deleted' WHERE id=%s", (id,))
     get_db().commit()
     return redirect('/farmer_dashboard')
 
@@ -196,13 +164,9 @@ def buyer_dashboard():
 
     products = cursor.fetchall()
 
-    lang = session.get('lang', 'en')
-    if lang != 'en':
-        for p in products:
-            p['name'] = translate_text(p['name'], lang)
-            p['description'] = translate_text(p['description'], lang)
-
-    return render_template('buyer_dashboard.html', products=products, t=load_language())
+    return render_template('buyer_dashboard.html',
+                           products=products,
+                           t=load_language())
 
 # ---------- CART ----------
 @app.route('/add_to_cart/<int:id>', methods=['POST'])
@@ -224,8 +188,11 @@ def add_to_cart(id):
     exist = cursor.fetchone()
 
     if exist:
-        cursor.execute("UPDATE cart SET quantity=quantity+%s WHERE id=%s",
-                       (qty, exist['id']))
+        cursor.execute("""
+            UPDATE cart 
+            SET quantity = quantity + %s 
+            WHERE buyer_id = %s AND product_id = %s
+        """, (qty, session['user_id'], id))
     else:
         cursor.execute("INSERT INTO cart (buyer_id,product_id,quantity) VALUES (%s,%s,%s)",
                        (session['user_id'], id, qty))
@@ -235,7 +202,7 @@ def add_to_cart(id):
 
 @app.route('/cart')
 def cart():
-    if 'user_role' not in session or session['user_role'] != 'buyer':
+    if 'user_role' not in session:
         return redirect('/')
 
     cursor = get_cursor()
@@ -250,13 +217,13 @@ def cart():
     items = cursor.fetchall()
     total = sum(i['total_price'] for i in items)
 
-    return render_template('cart.html', cart_items=items, total_amount=total, t=load_language())
+    return render_template('cart.html',
+                           cart_items=items,
+                           total_amount=total,
+                           t=load_language())
 
-@app.route('/delete_from_cart/<int:id>', methods=['POST'])
-def delete_from_cart(id):
-    cursor = get_cursor()
-    cursor.execute("DELETE FROM cart WHERE id=%s", (id,))
-    get_db().commit()
+@app.route('/payment')
+def payment_page():
     return redirect('/cart')
 
 # ---------- CHECKOUT ----------
@@ -271,6 +238,9 @@ def checkout():
     """, (session['user_id'],))
 
     items = cursor.fetchall()
+
+    if not items:
+        return "Cart is empty"
 
     for i in items:
         total = i['price'] * i['quantity']
