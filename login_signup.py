@@ -14,12 +14,14 @@ UPLOAD_FOLDER = 'static/images'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # ---------- MYSQL CONNECTION ----------
+import os
+
 db = mysql.connector.connect(
-    host=os.environ.get('MYSQLHOST', 'localhost'),
-    user=os.environ.get('MYSQLUSER', 'root'),
-    password=os.environ.get('MYSQLPASSWORD', 'Orpmk_2006'),
-    database=os.environ.get('MYSQLDATABASE', 'smart_farmer'),
-    port=int(os.environ.get('MYSQLPORT', 3306))
+    host=os.environ.get("MYSQLHOST"),
+    user=os.environ.get("MYSQLUSER"),
+    password=os.environ.get("MYSQLPASSWORD"),
+    database=os.environ.get("MYSQLDATABASE"),
+    port=int(os.environ.get("MYSQLPORT", 3306))
 )
 
 def get_cursor():
