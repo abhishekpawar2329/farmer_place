@@ -68,13 +68,13 @@ def login_page():
 def auth():
     cursor = get_cursor()
 
-    mode = request.form['mode']
-    email = request.form['email']
-    password = request.form['password']
-    role = request.form['role']
+    mode = request.form.get('mode')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    role = request.form.get('role')
 
     if mode == "signup":
-        name = request.form['name']
+        name = request.form.get('name')
         hashed = generate_password_hash(password)
 
         cursor.execute(
@@ -126,13 +126,28 @@ def farmer_dashboard():
         t=load_language()
     )
 
+# ✅ FIXED ADD PRODUCT (MOBILE SAFE)
 @app.route('/add_product', methods=['POST'])
 def add_product():
+
     if 'user_role' not in session or session['user_role'] != 'farmer':
         return redirect('/')
 
     cursor = get_cursor()
 
+    # SAFE INPUT (no crash on mobile)
+    name = request.form.get('name')
+    category = request.form.get('category')
+    price = request.form.get('price')
+    unit = request.form.get('unit')
+    quantity = request.form.get('quantity', 0)
+    description = request.form.get('description', '')
+
+    # VALIDATION
+    if not name or not price:
+        return "Missing required fields"
+
+    # IMAGE HANDLING
     image = request.files.get('image')
     filename = 'default_crop.png'
 
@@ -141,18 +156,19 @@ def add_product():
         os.makedirs(UPLOAD_FOLDER, exist_ok=True)
         image.save(os.path.join(UPLOAD_FOLDER, filename))
 
+    # INSERT
     cursor.execute("""
         INSERT INTO products
         (farmer_id,name,category,price,unit,quantity,description,image,status)
         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,'Listed')
     """, (
         session['user_id'],
-        request.form['name'],
-        request.form['category'],
-        request.form['price'],
-        request.form['unit'],
-        request.form.get('quantity', 0),
-        request.form.get('description', ''),
+        name,
+        category,
+        price,
+        unit,
+        quantity,
+        description,
         filename
     ))
 
