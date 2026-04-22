@@ -32,16 +32,37 @@ def get_cursor():
 
 # ---------- TRANSLATION ----------
 def translate_text(text, lang):
+    if not text or lang == 'en':
+        return text
     try:
-        res = requests.get(
-            "https://api.mymemory.translated.net/get",
-            params={"q": text, "langpair": f"en|{lang}"},
-            timeout=5
+        cursor = get_cursor()
+        cursor.execute(
+            "SELECT translated FROM translations_cache WHERE original=%s AND lang=%s",
+            (text.lower(), lang)
         )
-        return res.json()["responseData"]["translatedText"]
+        cached = cursor.fetchone()
+        if cached:
+            return cached['translated']
+
+        url = "https://translate.googleapis.com/translate_a/single"
+        params = {
+            "client": "gtx",
+            "sl": "en",
+            "tl": lang,
+            "dt": "t",
+            "q": text
+        }
+        res = requests.get(url, params=params, timeout=5)
+        translated = res.json()[0][0][0]
+
+        cursor.execute(
+            "INSERT IGNORE INTO translations_cache (original, lang, translated) VALUES (%s,%s,%s)",
+            (text.lower(), lang, translated)
+        )
+        get_db().commit()
+        return translated
     except:
         return text
-
 def load_language():
     lang = request.args.get('lang')
     if lang:
