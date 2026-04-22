@@ -159,7 +159,8 @@ def delete_product(product_id):
     get_db().commit()
     return redirect('/farmer_dashboard')
 
-# ---------- BUYER DASHBOARD ----------@app.route('/buyer_dashboard')
+# ---------- BUYER DASHBOARD ----------
+@app.route('/buyer_dashboard')
 def buyer_dashboard():
     cursor = get_cursor()
     lang = session.get('lang', 'en')
