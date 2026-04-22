@@ -112,13 +112,14 @@ def auth():
 
     return "Invalid credentials"
 
-# ---------- FARMER DASHBOARD ----------
-@app.route('/farmer_dashboard')
+# ---------- FARMER DASHBOARD ----------@app.route('/farmer_dashboard')
 def farmer_dashboard():
     if 'user_role' not in session or session['user_role'] != 'farmer':
         return redirect('/')
     cursor = get_cursor()
-    lang = session.get('lang', 'en')
+    # Read lang from URL first, then session
+    lang = request.args.get('lang') or session.get('lang', 'en')
+    session['lang'] = lang
     cursor.execute("SELECT * FROM products WHERE farmer_id=%s", (session['user_id'],))
     products = cursor.fetchall()
     if lang != 'en':
@@ -180,11 +181,12 @@ def delete_product(product_id):
     get_db().commit()
     return redirect('/farmer_dashboard')
 
-# ---------- BUYER DASHBOARD ----------
-@app.route('/buyer_dashboard')
+# ---------- BUYER DASHBOARD ----------@app.route('/buyer_dashboard')
 def buyer_dashboard():
     cursor = get_cursor()
-    lang = session.get('lang', 'en')
+    # Read lang from URL first, then session
+    lang = request.args.get('lang') or session.get('lang', 'en')
+    session['lang'] = lang
     cursor.execute("""
         SELECT p.*, u.name farmer_name
         FROM products p
@@ -201,7 +203,6 @@ def buyer_dashboard():
     return render_template('buyer_dashboard.html',
                            products=products,
                            t=load_language())
-
 # ---------- ADD TO CART ----------
 @app.route('/add_to_cart/<int:id>', methods=['POST'])
 def add_to_cart(id):
@@ -240,12 +241,13 @@ def cart_count():
     count = cursor.fetchone()['count']
     return jsonify(count=count)
 
-# ---------- VIEW CART ----------
-@app.route('/cart')
+# ---------- VIEW CART ----------@app.route('/cart')
 def cart():
     if 'user_role' not in session:
         return redirect('/')
     cursor = get_cursor()
+    lang = request.args.get('lang') or session.get('lang', 'en')
+    session['lang'] = lang
     cursor.execute("""
         SELECT c.id, p.name, p.price, c.quantity,
         (p.price*c.quantity) total_price
@@ -253,6 +255,10 @@ def cart():
         WHERE c.buyer_id=%s
     """, (session['user_id'],))
     items = cursor.fetchall()
+    if lang != 'en':
+        for item in items:
+            if item.get('name'):
+                item['name'] = translate_text(item['name'], lang)
     total = sum(i['total_price'] for i in items)
     return render_template('cart.html',
                            cart_items=items,
@@ -270,12 +276,13 @@ def delete_from_cart(cart_id):
     get_db().commit()
     return redirect('/cart')
 
-# ---------- PAYMENT PAGE ----------
-@app.route('/payment')
+# ---------- PAYMENT PAGE ----------@app.route('/payment')
 def payment_page():
     if 'user_role' not in session or session['user_role'] != 'buyer':
         return redirect('/')
     cursor = get_cursor()
+    lang = request.args.get('lang') or session.get('lang', 'en')
+    session['lang'] = lang
     cursor.execute("""
         SELECT c.id, p.name, p.price, p.unit, c.quantity,
                (p.price * c.quantity) AS total_price
@@ -286,6 +293,10 @@ def payment_page():
     cart_items = cursor.fetchall()
     if not cart_items:
         return redirect('/cart')
+    if lang != 'en':
+        for item in cart_items:
+            if item.get('name'):
+                item['name'] = translate_text(item['name'], lang)
     total_amount = sum(item['total_price'] for item in cart_items)
     return render_template('payment.html',
                            cart_items=cart_items,
