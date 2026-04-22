@@ -224,7 +224,35 @@ def cart():
 
 @app.route('/payment')
 def payment_page():
-    return redirect('/cart')
+
+    if 'user_id' not in session or session['user_role'] != 'buyer':
+        return redirect('/')
+
+    cursor = get_cursor()
+    buyer_id = session['user_id']
+    t = load_language()
+
+    cursor.execute("""
+        SELECT c.id, p.name, p.price, p.unit, c.quantity,
+               (p.price * c.quantity) AS total_price
+        FROM cart c
+        JOIN products p ON c.product_id = p.id
+        WHERE c.buyer_id=%s
+    """, (buyer_id,))
+
+    cart_items = cursor.fetchall()
+
+    if not cart_items:
+        return redirect('/cart')
+
+    total_amount = sum(item['total_price'] for item in cart_items)
+
+    return render_template(
+        'payment.html',
+        cart_items=cart_items,
+        total_amount=total_amount,
+        t=t
+    )
 
 # ---------- CHECKOUT ----------
 @app.route('/checkout', methods=['POST'])
