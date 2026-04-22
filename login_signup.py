@@ -97,13 +97,19 @@ def farmer_dashboard():
     if 'user_role' not in session or session['user_role'] != 'farmer':
         return redirect('/')
     cursor = get_cursor()
+    lang = session.get('lang', 'en')
     cursor.execute("SELECT * FROM products WHERE farmer_id=%s", (session['user_id'],))
     products = cursor.fetchall()
+    if lang != 'en':
+        for product in products:
+            if product.get('name'):
+                product['name'] = translate_text(product['name'], lang)
+            if product.get('description'):
+                product['description'] = translate_text(product['description'], lang)
     return render_template('farmer_dashboard.html',
                            products=products,
                            farmer_name=session['user_name'],
                            t=load_language())
-
 # ---------- ADD PRODUCT ----------
 @app.route('/add_product', methods=['POST'])
 def add_product():
@@ -153,10 +159,10 @@ def delete_product(product_id):
     get_db().commit()
     return redirect('/farmer_dashboard')
 
-# ---------- BUYER DASHBOARD ----------
-@app.route('/buyer_dashboard')
+# ---------- BUYER DASHBOARD ----------@app.route('/buyer_dashboard')
 def buyer_dashboard():
     cursor = get_cursor()
+    lang = session.get('lang', 'en')
     cursor.execute("""
         SELECT p.*, u.name farmer_name
         FROM products p
@@ -164,6 +170,12 @@ def buyer_dashboard():
         WHERE p.quantity>0 AND p.status='Listed'
     """)
     products = cursor.fetchall()
+    if lang != 'en':
+        for product in products:
+            if product.get('name'):
+                product['name'] = translate_text(product['name'], lang)
+            if product.get('description'):
+                product['description'] = translate_text(product['description'], lang)
     return render_template('buyer_dashboard.html',
                            products=products,
                            t=load_language())
