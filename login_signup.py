@@ -112,7 +112,8 @@ def auth():
 
     return "Invalid credentials"
 
-# ---------- FARMER DASHBOARD ----------@app.route('/farmer_dashboard')
+# ---------- FARMER DASHBOARD ----------
+@app.route('/farmer_dashboard')
 def farmer_dashboard():
     if 'user_role' not in session or session['user_role'] != 'farmer':
         return redirect('/')
@@ -181,7 +182,8 @@ def delete_product(product_id):
     get_db().commit()
     return redirect('/farmer_dashboard')
 
-# ---------- BUYER DASHBOARD ----------@app.route('/buyer_dashboard')
+# ---------- BUYER DASHBOARD ----------
+@app.route('/buyer_dashboard')
 def buyer_dashboard():
     cursor = get_cursor()
     # Read lang from URL first, then session
@@ -241,7 +243,8 @@ def cart_count():
     count = cursor.fetchone()['count']
     return jsonify(count=count)
 
-# ---------- VIEW CART ----------@app.route('/cart')
+# ---------- VIEW CART ----------
+@app.route('/cart')
 def cart():
     if 'user_role' not in session:
         return redirect('/')
@@ -276,7 +279,8 @@ def delete_from_cart(cart_id):
     get_db().commit()
     return redirect('/cart')
 
-# ---------- PAYMENT PAGE ----------@app.route('/payment')
+# ---------- PAYMENT PAGE ----------
+@app.route('/payment')
 def payment_page():
     if 'user_role' not in session or session['user_role'] != 'buyer':
         return redirect('/')
