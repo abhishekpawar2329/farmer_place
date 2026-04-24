@@ -118,20 +118,40 @@ def farmer_dashboard():
     if 'user_role' not in session or session['user_role'] != 'farmer':
         return redirect('/')
     cursor = get_cursor()
-    # Read lang from URL first, then session
     lang = request.args.get('lang') or session.get('lang', 'en')
     session['lang'] = lang
-    cursor.execute("SELECT * FROM products WHERE farmer_id=%s", (session['user_id'],))
+    fid = session['user_id']
+
+    # Get products
+    cursor.execute("SELECT * FROM products WHERE farmer_id=%s", (fid,))
     products = cursor.fetchall()
+
     if lang != 'en':
         for product in products:
             if product.get('name'):
                 product['name'] = translate_text(product['name'], lang)
             if product.get('description'):
                 product['description'] = translate_text(product['description'], lang)
+
+    # Get total orders count
+    cursor.execute("""
+        SELECT COUNT(*) AS order_count 
+        FROM orders WHERE farmer_id=%s
+    """, (fid,))
+    order_count = cursor.fetchone()['order_count']
+
+    # Get total earnings
+    cursor.execute("""
+        SELECT COALESCE(SUM(total_price), 0) AS total_earnings 
+        FROM orders WHERE farmer_id=%s AND status='Confirmed'
+    """, (fid,))
+    total_earnings = cursor.fetchone()['total_earnings']
+
     return render_template('farmer_dashboard.html',
                            products=products,
                            farmer_name=session['user_name'],
+                           order_count=order_count,
+                           total_earnings=total_earnings,
                            t=load_language())
 # ---------- ADD PRODUCT ----------
 @app.route('/add_product', methods=['POST'])
